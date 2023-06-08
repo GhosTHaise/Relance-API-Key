@@ -1,4 +1,4 @@
-import { model,models,Schema } from "mongoose";
+import mongoose,{ Schema , model} from "mongoose"
 
 const API_KEY_Schema = new Schema({
     name : {
@@ -11,5 +11,5 @@ const API_KEY_Schema = new Schema({
     }
 })
 
-const API = models.API || new model("API",API_KEY_Schema);
+const API = new model("API",API_KEY_Schema);
 export default API;
