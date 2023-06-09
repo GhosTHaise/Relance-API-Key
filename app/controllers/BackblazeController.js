@@ -57,8 +57,22 @@ const updateExistingKey = async (req,res) => {
     }
 }
 
+const getTokenKey = async (req,res) => {
+    try {
+        connectToDB()
+
+        const backblaze_token = await API.find({name : "backblaze"});
+        res.status(200).json({
+            backblaze_token
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export {
-    updateExistingKey
+    updateExistingKey,
+    getTokenKey
 }
 
 //curl -H 'Authorization: 4_005f1b3c53e8cde0000000001_01ace089_5f1bd2_acct_IcIhm5CXKp2u2a4Z8-TDmvqawc4=' -d '{"bucketId": "3ff1db23dc15439e888c0d1e"}' https://api005.backblazeb2.com/b2api/v2/b2_get_upload_url
