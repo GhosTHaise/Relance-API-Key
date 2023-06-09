@@ -40,8 +40,14 @@ const updateExistingKey = async (req,res) => {
             name : "backblaze",
             token : jwt_token
         }
-
-        await API.findOneAndUpdate({name : "backblaze"},BackBlaze_api_jwt)
+        
+        const _last_data = await API.find({name : "backblaze"});
+        if(_last_data.length < 1){
+            const new_API = new API({...BackBlaze_api_jwt});
+            await new_API.save()
+        }else{
+            await API.findOneAndUpdate({name : "backblaze"},BackBlaze_api_jwt)
+        }
 
         res.status(200).json({
             message : "New access Token Upload !"
