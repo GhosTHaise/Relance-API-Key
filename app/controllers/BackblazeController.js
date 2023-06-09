@@ -2,7 +2,7 @@ import fetch from "node-fetch"
 import { connectToDB } from "../MongoDB/connect.js"
 import API from "../MongoDB/models/API.js"
 import * as dotenv from "dotenv"
-
+import jwt from "jsonwebtoken"
 
 dotenv.config();
 const updateExistingKey = async (req,res) => {
@@ -18,19 +18,33 @@ const updateExistingKey = async (req,res) => {
         const {authorizationToken} = await request_authorization_token.json(); 
         //We have GOT TOKEN
         const request_uploadUrl  = await fetch("https://api005.backblazeb2.com/b2api/v2/b2_get_upload_url",{
-            method : "GET",
+            method : "POST",
             headers : {
                 "Authorization" : authorizationToken
             },
-            body : {
+            body : JSON.stringify({
                 bucketId : process.env.BUCKET_ID
-            }
+            })
         })
         
-        const upload_url = await request_uploadUrl.json();
-        
+        const {authorizationToken : uploadUrl_authorizationToken,uploadUrl} = await request_uploadUrl.json();
+        const jwt_token = jwt.sign({
+            authorizationToken : uploadUrl_authorizationToken,
+            uploadUrl
+        },process.env.JWT_SECRET_KEY);
+
+        //WE GOT JWT-TOKEN
+        connectToDB()
+
+        const BackBlaze_api_jwt = {
+            name : "backblaze",
+            token : jwt_token
+        }
+
+        await API.findOneAndUpdate({name : "backblaze"},BackBlaze_api_jwt)
+
         res.status(200).json({
-            key : upload_url
+            message : "New access Token Upload !"
         })
     } catch (error) {
         console.log(error);
