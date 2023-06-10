@@ -1,9 +1,26 @@
 import express from "express"
 import BackblazeRoute from "./routes/BackblazeRoute.js"
-import cors from "cors"
+import cors from "cors";
+import cron from "node-cron";
+import fetch from "node-fetch";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const app = new express();
 const PORT = 4000;
+
+cron.schedule("* * */4 * * *",() => {
+    const event_handle = async () => {
+        let request = await fetch(process.env.SERRVER_URL,{
+            method : "Patch"
+        });
+
+        await request.json();
+    }
+
+    event_handle()
+})
 //MiddleWare
 app.use(cors());
 //API Route Declaration

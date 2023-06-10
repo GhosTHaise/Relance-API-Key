@@ -8,6 +8,10 @@ const API_KEY_Schema = new Schema({
     token : {
         type : String,
         required : [true,"Token is required"]
+    },
+    date_last_upload : {
+        type : String,
+        required : [true,"Date las upload is required"]
     }
 })
 

@@ -38,7 +38,8 @@ const updateExistingKey = async (req,res) => {
 
         const BackBlaze_api_jwt = {
             name : "backblaze",
-            token : jwt_token
+            token : jwt_token,
+            date_last_upload : new Date().toLocaleString()
         }
         
         const _last_data = await API.find({name : "backblaze"});
