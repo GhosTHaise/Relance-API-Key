@@ -12,11 +12,15 @@ const PORT = 4000;
 
 cron.schedule("* * */4 * * *",() => {
     const event_handle = async () => {
-        let request = await fetch(process.env.SERRVER_URL,{
-            method : "Patch"
-        });
-
-        await request.json();
+        try {
+            let request = await fetch(process.env.SERVER_URL,{
+                method : "Patch"
+            });
+    
+            await request.json();
+        } catch (error) {
+            console.log("Unable to refresh key :"+error.message);
+        }
     }
 
     event_handle()
